@@ -1,0 +1,26 @@
+{
+  "name": "icommerce",
+  "version": "1.0.0",
+  "description": "This is test e-commerce website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InfiniteLoop75/iCommerce.git"
+  },
+  "keywords": [
+    "iCommerce"
+  ],
+  "author": "Ibrokhim Saydakhmatov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InfiniteLoop75/iCommerce/issues"
+  },
+  "homepage": "https://github.com/InfiniteLoop75/iCommerce#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
