@@ -10,7 +10,7 @@ const {
 } = require('./models/user');
 //Finishing import
 var app = express();
-// var publicPath = path.join(__dirname, './public');
+var publicPath = __dirname + '/public';
 mongoose.connect('mongodb://localhost:27017/iCommerce', {
     useMongoClient: true
 });
@@ -19,14 +19,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(express.static(publicPath));
 app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
-// app.use(express.static(publicPath));
 
-app.get('/', (req, res) => {
-    res.render('home');
+app.set('view engine', 'ejs');
+
+
+app.get('/', function(req, res) {
+    res.render('main/home');
 });
+app.get('/about', function(req, res){
+    res.render('main/about');
+});
+
+
+
+
+
 
 app.post('/test', (req, res, next) => {
     var user = new User({
