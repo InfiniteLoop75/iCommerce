@@ -4,13 +4,17 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const ejsMate = require('ejs-mate');
 const path = require('path');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('express-flash');
 //Custom modules
-const {
-    User
-} = require('./models/user');
+const {User} = require('./models/user');
+const {indexRouter} = require('./routes/main');
+const {userRouter} = require('./routes/user');
 //Finishing import
 var app = express();
 var publicPath = __dirname + '/public';
+app.use(express.static(publicPath));
 mongoose.connect('mongodb://localhost:27017/iCommerce', {
     useMongoClient: true
 });
@@ -19,41 +23,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(express.static(publicPath));
+app.use(cookieParser());
+app.use(session({resave: true, saveUninitialized: true, secret: "Ibrokhim@4144"}));
+app.use(flash());
+
 app.engine('ejs', ejsMate);
 
 app.set('view engine', 'ejs');
 
-
-app.get('/', function(req, res) {
-    res.render('main/home');
-});
-app.get('/about', function(req, res){
-    res.render('main/about');
-});
-
-
-
-
-
-
-app.post('/test', (req, res, next) => {
-    var user = new User({
-        profile: {
-            name: req.body.name
-        },
-        email: req.body.email,
-        password: req.body.password
-    });
-    user.save().then((doc) => {
-        res.send(doc);
-    }, (e) => {
-        res.status(400).send(e);
-        console.log(e);
-    });
-
-});
 app.use(morgan('dev'));
+app.use(indexRouter);
+app.use(userRouter);
 
 app.listen(3000, (err) => {
     if (err) throw err;
