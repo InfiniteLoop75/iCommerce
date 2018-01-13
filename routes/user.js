@@ -33,11 +33,13 @@ userRouter.get('/signup', (req, res)=>{
 userRouter.post('/signup', function(req, res, next){
     var user = new User({
         profile: {
-            name: req.body.name
+            name: req.body.name,
+            
         },
         email: req.body.email,
         password: req.body.password
     });
+    user.profile.picture = user.gravatar();
     User.findOne({email: user.email}, function(err, found){
         if(found){
             req.flash('errors', 'Account with email address already exists')
@@ -48,7 +50,12 @@ userRouter.post('/signup', function(req, res, next){
                 if(err){
                     return next(err);
                 }
-                return res.redirect('/');
+                req.logIn(user, function(err){
+                    if(err){
+                        return next(err);
+                    }
+                    res.redirect('/profile');
+                });
             });
         }
     });
