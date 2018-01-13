@@ -6,7 +6,15 @@
         <br>
         <p>Name: <%=user.profile.name %></p>
         <p>Email: <%=user.email %></p>
-        <p>Address: <%=user.address %></p>
+
+        <%if(user.profile.address === "" || typeof user.profile.address ==='undefined'){%>
+            <p>Adress: <span style="color: #c0392b; font-weight:bold">You have no address</span></p>
+        <%} else{%>
+            <p>Address: <%= user.profile.address %></p>
+        <%}%>
+        
+
+        <a href="/edit-profile" class="btn btn-primary btn-lg">Edit profile</a>
     </div>
 </div>
 </div>  
