@@ -15,10 +15,14 @@ userRouter.post('/login', passport.authenticate('local-login',{
     failureFlash: true
 }));
 userRouter.get('/profile', function(req, res){
-    User.findOne({_id: req.user._id}, function(err, user){
-        if(err) return next(err);
-        res.render('accounts/profile', {user});
-    });
+    if(req.user){
+        User.findOne({_id: req.user._id}, function(err, user){
+            if(err) return next(err);
+            res.render('accounts/profile', {user});
+        });
+    }else{
+        res.redirect('/login');
+    }
     
 });
 userRouter.get('/signup', (req, res)=>{
@@ -50,5 +54,8 @@ userRouter.post('/signup', function(req, res, next){
     });
 
 });
-
+userRouter.get('/logout', function(req, res, next){
+    req.logout();
+    res.redirect('/');
+});
 module.exports = {userRouter}
