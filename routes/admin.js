@@ -6,7 +6,7 @@ adminRouter.get('/add-category', function(req,res,next){
 });
 adminRouter.post('/add-category', function(req,res,next){
     var category = new Category({
-        name: req.body.name
+        name: req.body.cat_name
     });
     category.save(function(err){
         if(err)return next(err);
@@ -14,3 +14,5 @@ adminRouter.post('/add-category', function(req,res,next){
         return res.redirect('/add-category');
     });
 });
+
+module.exports ={adminRouter};

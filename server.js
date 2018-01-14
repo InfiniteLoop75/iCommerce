@@ -11,8 +11,11 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 //Custom modules
 const {User} = require('./models/user');
+const {Category} = require('./models/category');
 const {indexRouter} = require('./routes/main');
 const {userRouter} = require('./routes/user');
+const {apiRouter} = require('./api/api');
+const {adminRouter} = require('./routes/admin');
 const {database, port, secretKey} = require('./config/secret');
 //Finishing import
 var app = express();
@@ -40,6 +43,13 @@ app.use(function(req,res,next){
     res.locals.user = req.user;
     next();
 });
+app.use(function(req,res,next){
+    Category.find({}, function(err,categories){
+        if(err) return next(err);
+        res.locals.categories = categories;
+        next();
+    });
+});
 
 app.engine('ejs', ejsMate);
 
@@ -48,7 +58,8 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(indexRouter);
 app.use(userRouter);
-
+app.use(adminRouter);
+app.use('/api',apiRouter);
 app.listen(port, (err) => {
     if (err) throw err;
     console.log('Server is running');
