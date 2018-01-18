@@ -12,9 +12,12 @@ var ProductSchema = new Schema({
 });
 ProductSchema.plugin(mongoosastic, {
     hosts:[
-        'localhost: 9200'
+        'localhost:9200'
     ]
 });
+/**
+ * 
+ */
 var Product = mongoose.model('Product', ProductSchema);
 module.exports = {
     Product

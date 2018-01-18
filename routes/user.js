@@ -50,9 +50,15 @@ userRouter.post('/signup', function(req, res, next){
                 if(err){
                     return next(err);
                 }
+                if(req.body.password.length>7){
+                    var length = req.body.password.length;
+                    var toGo = 7 - length;
+                    return req.flash('errors', 'Password must be minimum of length 7.' + toGo + ' to go.');
+                }
                 req.logIn(user, function(err){
                     if(err){
-                        return next(err);
+                       return req.flash('errors', 'Password must be minimum of length 7.');
+                        
                     }
                     res.redirect('/profile');
                 });
