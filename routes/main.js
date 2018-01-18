@@ -2,6 +2,27 @@ const express = require('express');
 const {Product} = require('../models/product');
 var indexRouter = express.Router();
 var mongosastic = require('mongoosastic');
+
+function paginate(req, res, next) {
+    var per = 9;
+        var page = req.params.page;
+        Product
+            .find()
+            .skip(per*page)
+            .limit(per)
+            .populate('category')
+            .exec(function(err,products){
+                if(err) return next(err);
+                Product.count().exec(function(err, count){
+                    if(err) return next(err);
+                    res.render('main/product-main',{
+                        products,
+                        pages: count / per
+                    });
+                });
+            });
+}
+
 Product.createMapping(function(err, mapping){
     if(err){
         console.log('error creating mapping');
@@ -28,8 +49,16 @@ indexRouter.post('/search', function(req, res){
     res.redirect('/search?q=' + req.body.q);
 });
 
-indexRouter.get('/', function(req, res) {
-    res.render('main/home');
+indexRouter.get('/', function(req, res,next) {
+    if(req.user){
+        paginate(req,res,next);
+    }else{
+        res.render('main/home');
+    }
+    
+});
+indexRouter.get('/page/:page', function(req,res,next){
+    paginate(req,res,next);   
 });
 indexRouter.get('/about', function(req, res, next){
     res.render('main/about');
